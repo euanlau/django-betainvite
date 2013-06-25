@@ -2,8 +2,9 @@ from django.contrib import admin
 from .models import InvitationKey, InvitationUser, WaitingListEntry
 
 class WaitingListEntryAdmin(admin.ModelAdmin):
-
-    list_display = ["email", "created"]
+    list_display = ('email', 'created', 'invited',)
+    list_filter = ('created', 'invited')
+    date_hierarchy = 'created'
     search_fields = ["email"]
 
 class InvitationKeyAdmin(admin.ModelAdmin):

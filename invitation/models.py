@@ -22,13 +22,16 @@ else:
 
 
 class WaitingListEntry(models.Model):
-
     email = models.EmailField(_("email address"), unique=True)
     created = models.DateTimeField(_("created"), default=timezone.now, editable=False)
+    invited = models.BooleanField(_('Invited'), default=False)
 
     class Meta:
         verbose_name = _("waiting list entry")
         verbose_name_plural = _("waiting list entries")
+
+    def __unicode__(self):
+        return self.email
 
 
 class InvitationKeyManager(models.Manager):
