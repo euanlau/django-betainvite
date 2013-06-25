@@ -9,11 +9,9 @@ contains the actual logic for determining which keys are deleted.
 
 from django.core.management.base import NoArgsCommand
 
-from invitation.models import InvitationKey
-
-
 class Command(NoArgsCommand):
     help = "Delete expired invitations' keys from the database"
 
     def handle_noargs(self, **options):
+        from invitation.models import InvitationKey
         InvitationKey.objects.delete_expired_keys()

@@ -1,20 +1,20 @@
-from django.conf import settings
+
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 from registration.views import register as registration_register
 from registration.forms import RegistrationForm
 from registration.backends import default as registration_backend
 
 from invitation.models import InvitationKey
-from invitation.forms import InvitationKeyForm
+from invitation.forms import InvitationKeyForm, WaitingListEntryForm
 from invitation.backends import InvitationBackend
-from django.shortcuts import render_to_response
+from invitation.conf import settings
 
-from .forms import WaitingListEntryForm
 from .signals import signed_up
 
 is_key_valid = InvitationKey.objects.is_key_valid
@@ -39,7 +39,7 @@ def waitlist_signup(request, post_save_redirect=None):
     return render(request, "waitinglist/list_signup.html", ctx)
 
 def invited(request, invitation_key=None, extra_context=None):
-    if getattr(settings, 'INVITE_MODE', False):
+    if settings.INVITE_MODE:
         if invitation_key and is_key_valid(invitation_key):
             template_name = 'invitation/invited.html'
         else:
@@ -58,7 +58,7 @@ def register(request, backend, success_url=None,
             wrong_template_name='invitation/wrong_invitation_key.html',
             extra_context=None):
     extra_context = extra_context is not None and extra_context.copy() or {}
-    if getattr(settings, 'INVITE_MODE', False):
+    if settings.INVITE_MODE:
         invitation_key = request.REQUEST.get('invitation_key', False)
         if invitation_key:
             extra_context.update({'invitation_key': invitation_key})

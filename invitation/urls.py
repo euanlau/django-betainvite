@@ -1,7 +1,6 @@
 from django.conf.urls.defaults import *
 from django.views.generic import TemplateView
 
-from registration.forms import RegistrationFormTermsOfService
 from invitation.views import invite, invited, register, waitlist_signup
 
 urlpatterns = patterns('',
