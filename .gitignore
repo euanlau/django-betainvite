@@ -1,2 +1,13 @@
 *.pyc
+*.elc
+*.pyc
+*~
+*.orig
+*.log
+*.swp
+*.tmp
+*.DS_Store
+testdb.sqlite
+registration
 /django_invitation.egg-info
+dist/*
