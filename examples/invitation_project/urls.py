@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 
 from registration.forms import RegistrationFormTermsOfService
-from invitation.views import register
+from betainvite.views import register
 
 admin.autodiscover()
 
@@ -13,7 +13,7 @@ if getattr(settings, 'INVITE_MODE', False):
         url(r'^accounts/register/$',    register,
                                             {
                                                 'form_class': RegistrationFormTermsOfService,
-                                                'backend': 'invitation.backends.InvitationBackend',
+                                                'backend': 'betainvite.backends.InvitationBackend',
                                             },
                                             name='registration_register'),
     )
@@ -28,7 +28,7 @@ else:
     )
 
 urlpatterns += patterns('',
-    url(r'^accounts/',              include('invitation.urls')),
+    url(r'^accounts/',              include('betainvite.urls')),
     url(r'^accounts/',              include('registration.urls')),
     url(r'^admin/',                 include(admin.site.urls)),
     

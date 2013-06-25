@@ -20,7 +20,7 @@ except ImportError: # django < 1.5
 else:
     User = get_user_model()
 
-from invitation.conf import settings as appsettings
+from betainvite.conf import settings as appsettings
 
 class WaitingListEntry(models.Model):
     email = models.EmailField(_("email address"), unique=True)

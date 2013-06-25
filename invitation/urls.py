@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.views.generic import TemplateView
 
-from invitation.views import invite, waitlist_signup
+from betainvite.views import invite, waitlist_signup
 
 urlpatterns = patterns('',
     url(r'^invite/complete/$',

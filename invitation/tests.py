@@ -1,5 +1,5 @@
 """
-Unit tests for django-invitation.
+Unit tests for django-betainvite.
 
 These tests assume that you've completed all the prerequisites for
 getting django-invitation running in the default setup, to wit:
@@ -26,8 +26,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from invitation import forms
-from invitation.models import InvitationKey, InvitationUser
-from invitation.conf import settings
+from betainvite.models import InvitationKey, InvitationUser
+from betainvite.conf import settings
 
 class InvitationTestCase(TestCase):
     """
@@ -64,7 +64,7 @@ class InvitationTestCase(TestCase):
 
 class InvitationModelTests(InvitationTestCase):
     """
-    Tests for the model-oriented functionality of django-invitation.
+    Tests for the model-oriented functionality of django-betainvite.
 
     """
     def test_invitation_key_created(self):
@@ -150,7 +150,7 @@ class InvitationModelTests(InvitationTestCase):
 class InvitationFormTests(InvitationTestCase):
     """
     Tests for the forms and custom validation logic included in
-    django-invitation.
+    django-betainvite.
 
     """
     def test_invitation_form(self):
@@ -177,7 +177,7 @@ class InvitationFormTests(InvitationTestCase):
 
 class InvitationViewTests(InvitationTestCase):
     """
-    Tests for the views included in django-invitation.
+    Tests for the views included in django-betainvite.
 
     """
     def test_invitation_view(self):

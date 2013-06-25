@@ -19,7 +19,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        from invitation.models import InvitationKey
+        from betainvite.models import InvitationKey
         current_site = Site.objects.get_current()
         count = options.get('count')
         view = options.get('view')

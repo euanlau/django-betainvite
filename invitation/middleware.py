@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
 
-from invitation.conf import settings
-from invitation.models import InvitationKey
+from betainvite.conf import settings
+from betainvite.models import InvitationKey
 
 is_key_valid = InvitationKey.objects.is_key_valid
 
@@ -41,7 +41,7 @@ class BetaMiddleware(object):
             # private access is not enabled, just let user to access the view
             return
 
-        whitelisted_modules = ['django.contrib.auth.views', 'django.views.static', 'invitation.views']
+        whitelisted_modules = ['django.contrib.auth.views', 'django.views.static', 'betainvite.views']
         if self.always_allow_modules:
             whitelisted_modules += self.always_allow_modules
 

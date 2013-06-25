@@ -6,9 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from invitation.models import InvitationKey
-from invitation.forms import InvitationKeyForm, WaitingListEntryForm
-from invitation.conf import settings
+from betainvite.models import InvitationKey
+from betainvite.forms import InvitationKeyForm, WaitingListEntryForm
+from betainvite.conf import settings
 
 from .signals import signed_up
 
