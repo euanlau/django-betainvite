@@ -1,12 +1,17 @@
 from setuptools import setup, find_packages
- 
+
 setup(
-    name='django-invitation',
-    version='1.0',
-    description='Built on top of django-registration, it restricts registration to a given number of invited person per active user (strategy introduced by GMail to involve 2.0 users).',
-    author='David Larlet',
-    author_email='david@larlet.fr',
-    url='http://code.welldev.org/django-invitation/',
+    name='django-betainvite',
+    version='0.9',
+    install_requires = [
+        'django-crispy-forms>=1.1.1',
+        'django-registration>=1.4',
+    ],
+    description='An application that handles beta invitations and restricts access to a private beta site.',
+    author='Euan Lau',
+    author_email='euanlau@gmail.com',
+    url='https://github.com/euanlau/django-betainvite/',
+    download_url='https://github.com/euanlau/django-betainvite/downloads',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -21,7 +26,4 @@ setup(
     # svn and CVS by default
     include_package_data=True,
     zip_safe=False,
-    # Tells setuptools to download setuptools_hg before running setup.py so
-    # it can find the data files under Hg version control.
-    setup_requires=['setuptools_hg'],
 )

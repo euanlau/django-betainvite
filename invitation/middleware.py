@@ -1,58 +1,49 @@
-from django.conf import settings
 from django.http import HttpResponseRedirect
+from django.shortcuts import resolve_url
 
-class PrivateBetaMiddleware(object):
+from invitation.conf import settings
+from invitation.models import InvitationKey
+
+is_key_valid = InvitationKey.objects.is_key_valid
+
+class BetaMiddleware(object):
     """
     Add this to your ``MIDDLEWARE_CLASSES`` make all views except for
     those in the account application require that a user be logged in.
     This can be a quick and easy way to restrict views on your site,
     particularly if you remove the ability to create accounts.
-
-    **Settings:**
-
-    ``PRIVATEBETA_ENABLE_BETA``
-        Whether or not the beta middleware should be used. If set to `False`
-        the PrivateBetaMiddleware middleware will be ignored and the request
-        will be returned. This is useful if you want to disable privatebeta
-        on a development machine. Default is `True`.
-
-    ``PRIVATEBETA_NEVER_ALLOW_VIEWS``
-        A list of full view names that should *never* be displayed.  This
-        list is checked before the others so that this middleware exhibits
-        deny then allow behavior.
-
-    ``PRIVATEBETA_ALWAYS_ALLOW_VIEWS``
-        A list of full view names that should always pass through.
-
-    ``PRIVATEBETA_ALWAYS_ALLOW_MODULES``
-        A list of modules that should always pass through.  All
-        views in ``django.contrib.auth.views``, ``django.views.static``
-        and ``privatebeta.views`` will pass through unless they are
-        explicitly prohibited in ``PRIVATEBETA_NEVER_ALLOW_VIEWS``
-
-    ``PRIVATEBETA_REDIRECT_URL``
-        The URL to redirect to.  Can be relative or absolute.
     """
 
     def __init__(self):
-        self.enable_beta = getattr(settings, 'PRIVATEBETA_ENABLE_BETA', True)
-        self.never_allow_views = getattr(settings, 'PRIVATEBETA_NEVER_ALLOW_VIEWS', [])
-        self.always_allow_views = getattr(settings, 'PRIVATEBETA_ALWAYS_ALLOW_VIEWS', [])
-        self.always_allow_modules = getattr(settings, 'PRIVATEBETA_ALWAYS_ALLOW_MODULES', [])
-        self.redirect_url = getattr(settings, 'PRIVATEBETA_REDIRECT_URL', '/invite/')
+        self.private_access = settings.BETA_PRIVATE_MODE
+        self.always_allow_views = settings.BETA_ALWAYS_ALLOW_VIEWS
+        self.always_allow_modules = settings.BETA_ALWAYS_ALLOW_MODULES
+        self.redirect_url = resolve_url(settings.BETA_REDIRECT_URL)
 
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if request.user.is_authenticated() or not self.enable_beta:
+
+        if request.user.is_authenticated():
             # User is logged in, no need to check anything else.
             return
-        whitelisted_modules = ['django.contrib.auth.views', 'django.views.static', 'privatebeta.views']
-        if self.always_allow_modules:
-            whitelisted_modules += self.always_allow_modules
 
         full_view_name = '%s.%s' % (view_func.__module__, view_func.__name__)
 
-        if full_view_name in self.never_allow_views:
-            return HttpResponseRedirect(self.redirect_url)
+        if full_view_name in settings.BETA_REGISTRATION_VIEWS:
+            if settings.BETA_INVITATION_REQUIRED:
+                # invitation is required to register
+                invitation_key = request.REQUEST.get('invitation_key', False)
+                if invitation_key and is_key_valid(invitation_key):
+                    return
+
+                return HttpResponseRedirect(self.redirect_url)
+
+        if not self.private_access:
+            # private access is not enabled, just let user to access the view
+            return
+
+        whitelisted_modules = ['django.contrib.auth.views', 'django.views.static', 'invitation.views']
+        if self.always_allow_modules:
+            whitelisted_modules += self.always_allow_modules
 
         if full_view_name in self.always_allow_views:
             return

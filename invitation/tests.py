@@ -215,36 +215,6 @@ class InvitationViewTests(InvitationTestCase):
         self.assertEqual(response.context['remaining_invitations'], 0)
         self.failUnless(response.context['form'])
 
-    def test_invited_view(self):
-        """
-        Test that the invited view invite the user from a valid
-        key and fails if the key is invalid or has expired.
-
-        """
-        # Valid key puts use the invited template.
-        response = self.client.get(reverse('invitation_invited',
-                                           kwargs={ 'invitation_key': self.sample_key.key }))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'invitation/invited.html')
-
-        # Expired key use the wrong key template.
-        response = self.client.get(reverse('invitation_invited',
-                                           kwargs={ 'invitation_key': self.expired_key.key }))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'invitation/wrong_invitation_key.html')
-
-        # Invalid key use the wrong key template.
-        response = self.client.get(reverse('invitation_invited',
-                                           kwargs={ 'invitation_key': 'foo' }))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'invitation/wrong_invitation_key.html')
-
-        # Nonexistent key use the wrong key template.
-        response = self.client.get(reverse('invitation_invited',
-                                           kwargs={ 'invitation_key': sha.new('foo').hexdigest() }))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'invitation/wrong_invitation_key.html')
-
     def test_register_view(self):
         """
         Test that after registration a key cannot be reused.
@@ -283,21 +253,12 @@ class InviteModeOffTests(InvitationTestCase):
     """
     def setUp(self):
         super(InviteModeOffTests, self).setUp()
-        self.saved_invite_mode = settings.INVITE_MODE
-        settings.INVITE_MODE = False
+        self.saved_invite_mode = settings.BETA_INVITATION_REQUIRED
+        settings.BETA_INVITATION_REQUIRED = False
 
     def tearDown(self):
-        settings.INVITE_MODE = self.saved_invite_mode
+        settings.BETA_INVITATION_REQUIRED = self.saved_invite_mode
         super(InviteModeOffTests, self).tearDown()
-
-    def test_invited_view(self):
-        """
-        Test that the invited view redirects to registration_register.
-
-        """
-        response = self.client.get(reverse('invitation_invited',
-                            kwargs={ 'invitation_key': self.sample_key.key }))
-        self.assertRedirect(response, 'registration_register')
 
     def test_register_view(self):
         """

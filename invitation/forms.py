@@ -1,9 +1,12 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+from .models import WaitingListEntry
+
 class WaitingListEntryForm(forms.ModelForm):
     class Meta:
         model = WaitingListEntry
+        exclude = ['invited',]
 
     def clean_email(self):
         value = self.cleaned_data["email"]

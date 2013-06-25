@@ -6,13 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 
-from registration.views import register as registration_register
-from registration.forms import RegistrationForm
-from registration.backends import default as registration_backend
-
 from invitation.models import InvitationKey
 from invitation.forms import InvitationKeyForm, WaitingListEntryForm
-from invitation.backends import InvitationBackend
 from invitation.conf import settings
 
 from .signals import signed_up
@@ -27,7 +22,7 @@ def waitlist_signup(request, post_save_redirect=None):
             entry = form.save()
             signed_up.send(sender=list_signup, entry=entry)
             if post_save_redirect is None:
-                post_save_redirect = reverse("waitinglist_success")
+                post_save_redirect = reverse("waitlist_success")
             if not post_save_redirect.startswith("/"):
                 post_save_redirect = reverse(post_save_redirect)
             return redirect(post_save_redirect)
@@ -36,54 +31,18 @@ def waitlist_signup(request, post_save_redirect=None):
     ctx = {
         "form": form,
     }
-    return render(request, "waitinglist/list_signup.html", ctx)
+    return render_to_response("invitation/waitlist_signup.html", ctx, RequestContext(request))
 
-def invited(request, invitation_key=None, extra_context=None):
-    if settings.INVITE_MODE:
-        if invitation_key and is_key_valid(invitation_key):
-            template_name = 'invitation/invited.html'
-        else:
-            template_name = 'invitation/wrong_invitation_key.html'
-        extra_context = extra_context is not None and extra_context.copy() or {}
-        extra_context.update({'invitation_key': invitation_key})
-        return render_to_response(template_name, extra_context, RequestContext(request))
-    else:
-        return HttpResponseRedirect(reverse('registration_register'))
-
-def register(request, backend, success_url=None,
-            form_class=RegistrationForm,
-            disallowed_url='registration_disallowed',
-            post_registration_redirect=None,
-            template_name='registration/registration_form.html',
-            wrong_template_name='invitation/wrong_invitation_key.html',
-            extra_context=None):
-    extra_context = extra_context is not None and extra_context.copy() or {}
-    if settings.INVITE_MODE:
-        invitation_key = request.REQUEST.get('invitation_key', False)
-        if invitation_key:
-            extra_context.update({'invitation_key': invitation_key})
-            if is_key_valid(invitation_key):
-                return registration_register(request, backend, success_url,
-                                            form_class, disallowed_url,
-                                            template_name, extra_context)
-            else:
-                extra_context.update({'invalid_key': True})
-        else:
-            extra_context.update({'no_key': True})
-        return render_to_response(wrong_template_name, extra_context, RequestContext(request))
-    else:
-        return registration_register(request, backend, success_url, form_class,
-                                     disallowed_url, template_name, extra_context)
 
 @login_required
 def invite(request, success_url=None,
-            form_class=InvitationKeyForm,
-            template_name='invitation/invitation_form.html',
-            extra_context=None):
+           form_class=InvitationKeyForm,
+           template_name='invitation/invitation_form.html',
+           extra_context=None):
     extra_context = extra_context is not None and extra_context.copy() or {}
     remaining_invitations = remaining_invitations_for_user(request.user)
     if request.method == 'POST':
-        form = form_class(data=request.POST, files=request.FILES)
+        form = form_class(data=request.POST)
         if remaining_invitations > 0 and form.is_valid():
             invitation = InvitationKey.objects.create_invitation(request.user)
             invitation.send_to(form.cleaned_data["email"])
