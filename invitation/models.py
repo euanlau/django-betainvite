@@ -20,6 +20,17 @@ except ImportError: # django < 1.5
 else:
     User = get_user_model()
 
+
+class WaitingListEntry(models.Model):
+
+    email = models.EmailField(_("email address"), unique=True)
+    created = models.DateTimeField(_("created"), default=timezone.now, editable=False)
+
+    class Meta:
+        verbose_name = _("waiting list entry")
+        verbose_name_plural = _("waiting list entries")
+
+
 class InvitationKeyManager(models.Manager):
     def get_key(self, invitation_key):
         """

@@ -14,8 +14,29 @@ from invitation.forms import InvitationKeyForm
 from invitation.backends import InvitationBackend
 from django.shortcuts import render_to_response
 
+from .forms import WaitingListEntryForm
+from .signals import signed_up
+
 is_key_valid = InvitationKey.objects.is_key_valid
 remaining_invitations_for_user = InvitationKey.objects.remaining_invitations_for_user
+
+def waitlist_signup(request, post_save_redirect=None):
+    if request.method == "POST":
+        form = WaitingListEntryForm(request.POST)
+        if form.is_valid():
+            entry = form.save()
+            signed_up.send(sender=list_signup, entry=entry)
+            if post_save_redirect is None:
+                post_save_redirect = reverse("waitinglist_success")
+            if not post_save_redirect.startswith("/"):
+                post_save_redirect = reverse(post_save_redirect)
+            return redirect(post_save_redirect)
+    else:
+        form = WaitingListEntryForm()
+    ctx = {
+        "form": form,
+    }
+    return render(request, "waitinglist/list_signup.html", ctx)
 
 def invited(request, invitation_key=None, extra_context=None):
     if getattr(settings, 'INVITE_MODE', False):
