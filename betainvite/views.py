@@ -40,18 +40,16 @@ def invite(request, success_url=None,
            extra_context=None):
     extra_context = extra_context is not None and extra_context.copy() or {}
     remaining_invitations = remaining_invitations_for_user(request.user)
-    if request.method == 'POST':
-        form = form_class(data=request.POST)
-        if remaining_invitations > 0 and form.is_valid():
-            invitation = InvitationKey.objects.create_invitation(request.user)
-            invitation.send_to(form.cleaned_data["email"])
-            # success_url needs to be dynamically generated here; setting a
-            # a default value using reverse() will cause circular-import
-            # problems with the default URLConf for this application, which
-            # imports this file.
-            return HttpResponseRedirect(success_url or reverse('invitation_complete'))
-    else:
-        form = form_class()
+
+    form = form_class(request.POST or None)
+    if remaining_invitations > 0 and form.is_valid():
+        invitation = InvitationKey.objects.create_invitation(request.user)
+        invitation.send_to(form.cleaned_data["email"])
+        # success_url needs to be dynamically generated here; setting a
+        # a default value using reverse() will cause circular-import
+        # problems with the default URLConf for this application, which
+        # imports this file.
+        return HttpResponseRedirect(success_url or reverse('invitation_complete'))
     extra_context.update({
             'form': form,
             'remaining_invitations': remaining_invitations,
