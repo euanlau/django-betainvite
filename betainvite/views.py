@@ -16,7 +16,8 @@ remaining_invitations_for_user = InvitationKey.objects.remaining_invitations_for
 
 def waitlist_signup(request, form_class=WaitingListEntryForm,
                     template_name="betainvite/waitlist_signup.html",
-                    post_save_redirect=None):
+                    post_save_redirect=None,
+                    extra_context={}):
     form = form_class(request.POST or None)
     if form.is_valid():
         entry = form.save()
@@ -29,6 +30,7 @@ def waitlist_signup(request, form_class=WaitingListEntryForm,
     ctx = {
         "form": form,
     }
+    ctx.update(extra_context)
     return render_to_response(template_name, ctx, RequestContext(request))
 
 @login_required
