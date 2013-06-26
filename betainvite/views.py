@@ -12,7 +12,6 @@ from betainvite.conf import settings
 
 from .signals import signed_up
 
-is_key_valid = InvitationKey.objects.is_key_valid
 remaining_invitations_for_user = InvitationKey.objects.remaining_invitations_for_user
 
 def waitlist_signup(request, form_class=WaitingListEntryForm,
@@ -31,7 +30,6 @@ def waitlist_signup(request, form_class=WaitingListEntryForm,
         "form": form,
     }
     return render_to_response(template_name, ctx, RequestContext(request))
-
 
 @login_required
 def invite(request, success_url=None,
