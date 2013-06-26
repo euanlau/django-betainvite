@@ -20,7 +20,7 @@ def waitlist_signup(request, post_save_redirect=None):
         form = WaitingListEntryForm(request.POST)
         if form.is_valid():
             entry = form.save()
-            signed_up.send(sender=list_signup, entry=entry)
+            signed_up.send(sender=waitlist_signup, entry=entry)
             if post_save_redirect is None:
                 post_save_redirect = reverse("waitlist_success")
             if not post_save_redirect.startswith("/"):
