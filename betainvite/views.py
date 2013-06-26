@@ -15,23 +15,22 @@ from .signals import signed_up
 is_key_valid = InvitationKey.objects.is_key_valid
 remaining_invitations_for_user = InvitationKey.objects.remaining_invitations_for_user
 
-def waitlist_signup(request, post_save_redirect=None):
-    if request.method == "POST":
-        form = WaitingListEntryForm(request.POST)
-        if form.is_valid():
-            entry = form.save()
-            signed_up.send(sender=waitlist_signup, entry=entry)
-            if post_save_redirect is None:
-                post_save_redirect = reverse("waitlist_success")
-            if not post_save_redirect.startswith("/"):
-                post_save_redirect = reverse(post_save_redirect)
-            return redirect(post_save_redirect)
-    else:
-        form = WaitingListEntryForm()
+def waitlist_signup(request, form_class=WaitingListEntryForm,
+                    template_name="betainvite/waitlist_signup.html",
+                    post_save_redirect=None):
+    form = form_class(request.POST or None)
+    if form.is_valid():
+        entry = form.save()
+        signed_up.send(sender=waitlist_signup, entry=entry)
+        if post_save_redirect is None:
+            post_save_redirect = reverse("waitlist_success")
+        if not post_save_redirect.startswith("/"):
+            post_save_redirect = reverse(post_save_redirect)
+        return redirect(post_save_redirect)
     ctx = {
         "form": form,
     }
-    return render_to_response("betainvite/waitlist_signup.html", ctx, RequestContext(request))
+    return render_to_response(template_name, ctx, RequestContext(request))
 
 
 @login_required
