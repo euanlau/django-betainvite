@@ -5,7 +5,7 @@ setup(
     version='0.9',
     install_requires = [
         'django-crispy-forms>=1.1.1',
-        'django-registration>=1.4',
+        'django-registration>=0.8',
     ],
     description='An application that handles beta invitations and restricts access to a private beta site.',
     author='Euan Lau',
