@@ -12,6 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
+from django.utils import timezone
 
 try:
     from django.contrib.auth import get_user_model
@@ -24,7 +25,7 @@ from betainvite.conf import settings as appsettings
 
 class WaitingListEntry(models.Model):
     email = models.EmailField(_("email address"), unique=True)
-    created = models.DateTimeField(_("created"), default=datetime.datetime.now,
+    created = models.DateTimeField(_("created"), default=timezone.now,
                                    editable=False)
     invited = models.BooleanField(_('Invited'), default=False)
 
@@ -84,7 +85,7 @@ class InvitationKeyManager(models.Manager):
 class InvitationKey(models.Model):
     key = models.CharField(_('invitation key'), max_length=40)
     date_invited = models.DateTimeField(_('date invited'),
-                                        default=datetime.datetime.now)
+                                        default=timezone.now)
     from_user = models.ForeignKey(User, null=True, blank=True,
                                   related_name='invitations_sent')
     registrant = models.ForeignKey(User, null=True, blank=True,
@@ -121,7 +122,7 @@ class InvitationKey(models.Model):
 
         """
         expiration_date = datetime.timedelta(days=appsettings.INVITATIONS_VALID_DAYS)
-        return self.date_invited + expiration_date <= datetime.datetime.now()
+        return self.date_invited + expiration_date <= timezone.now()
     key_expired.boolean = True
 
     def mark_used(self, registrant):
