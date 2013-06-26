@@ -31,13 +31,13 @@ def waitlist_signup(request, post_save_redirect=None):
     ctx = {
         "form": form,
     }
-    return render_to_response("invitation/waitlist_signup.html", ctx, RequestContext(request))
+    return render_to_response("betainvite/waitlist_signup.html", ctx, RequestContext(request))
 
 
 @login_required
 def invite(request, success_url=None,
            form_class=InvitationKeyForm,
-           template_name='invitation/invitation_form.html',
+           template_name='betainvite/invitation_form.html',
            extra_context=None):
     extra_context = extra_context is not None and extra_context.copy() or {}
     remaining_invitations = remaining_invitations_for_user(request.user)

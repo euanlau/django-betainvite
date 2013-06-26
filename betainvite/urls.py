@@ -5,7 +5,7 @@ from betainvite.views import invite, waitlist_signup
 
 urlpatterns = patterns('',
     url(r'^invite/complete/$',
-        TemplateView.as_view(template_name='invitation/invitation_complete.html'),
+        TemplateView.as_view(template_name='betainvite/invitation_complete.html'),
         name='invitation_complete'),
     url(r'^invite/$',
         invite,
@@ -14,6 +14,6 @@ urlpatterns = patterns('',
         waitlist_signup,
         name="waitlist_signup"),
     url(r"^waitlist/success/$",
-        TemplateView.as_view(template_name="invitation/waitlist_success.html"),
+        TemplateView.as_view(template_name="betainvite/waitlist_success.html"),
         name="waitlist_success"),
 )
