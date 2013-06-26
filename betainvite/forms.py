@@ -7,6 +7,13 @@ from crispy_forms.layout import Submit
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Field
 from .models import WaitingListEntry
 
+try:
+    from django.contrib.auth import get_user_model
+except ImportError: # django < 1.5
+    from django.contrib.auth.models import User
+else:
+    User = get_user_model()
+
 class WaitingListEntryForm(forms.ModelForm):
     class Meta:
         model = WaitingListEntry
@@ -14,6 +21,13 @@ class WaitingListEntryForm(forms.ModelForm):
 
     def clean_email(self):
         value = self.cleaned_data["email"]
+
+        user_exists = User.objects.filter(email=value).exists()
+        if user_exists:
+            raise forms.ValidationError(
+                _("User already exists")
+            )
+
         try:
             entry = WaitingListEntry.objects.get(email=value)
         except WaitingListEntry.DoesNotExist:
@@ -36,7 +50,8 @@ class WaitingListEntryForm(forms.ModelForm):
         self.helper.form_class = 'validate form-inline'
         self.helper.form_method = 'post'
         self.helper.form_action =  reverse('waitlist_signup')
-
+        self.helper.help_text_inline = False
+        self.helper.error_text_inline = False
         self.helper.layout = Layout(
             Fieldset(
                 '',
