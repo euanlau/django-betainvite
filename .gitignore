@@ -9,5 +9,5 @@
 *.DS_Store
 testdb.sqlite
 registration
-/django_invitation.egg-info
+/django_betainvite.egg-info
 dist/*
