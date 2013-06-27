@@ -153,7 +153,7 @@ class InvitationKey(models.Model):
 
 
 class InvitationUser(models.Model):
-    inviter = models.ForeignKey(User, unique=True)
+    inviter = models.OneToOneField(User)
     invitations_remaining = models.IntegerField()
 
     def __unicode__(self):
