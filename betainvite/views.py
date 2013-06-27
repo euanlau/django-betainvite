@@ -50,8 +50,10 @@ def invite(request, success_url=None,
 
     if remaining_invitations > 0 and formset.is_valid():
         for form in formset:
-            invitation = InvitationKey.objects.create_invitation(request.user)
-            invitation.send_to(form.cleaned_data["email"])
+            email = form.cleaned_data.get('email', None)
+            if email:
+                invitation = InvitationKey.objects.create_invitation(request.user)
+                invitation.send_to(email)
         # success_url needs to be dynamically generated here; setting a
         # a default value using reverse() will cause circular-import3
         # problems with the default URLConf for this application, which
