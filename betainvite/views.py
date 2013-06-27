@@ -1,10 +1,11 @@
-
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+from django.forms.formsets import formset_factory
 
 from betainvite.models import InvitationKey
 from betainvite.forms import InvitationKeyForm, WaitingListEntryForm
@@ -41,17 +42,23 @@ def invite(request, success_url=None,
     extra_context = extra_context is not None and extra_context.copy() or {}
     remaining_invitations = remaining_invitations_for_user(request.user)
 
-    form = form_class(request.POST or None)
-    if remaining_invitations > 0 and form.is_valid():
-        invitation = InvitationKey.objects.create_invitation(request.user)
-        invitation.send_to(form.cleaned_data["email"])
+    InvitationFormSet = formset_factory(form_class, extra = remaining_invitations)
+
+    formset = InvitationFormSet(data=request.POST or None)
+    for idx,form  in enumerate(formset):
+        form.fields["email"].widget.attrs["placeholder"] = _('Email Address ') + str(idx+1)
+
+    if remaining_invitations > 0 and formset.is_valid():
+        for form in formset:
+            invitation = InvitationKey.objects.create_invitation(request.user)
+            invitation.send_to(form.cleaned_data["email"])
         # success_url needs to be dynamically generated here; setting a
-        # a default value using reverse() will cause circular-import
+        # a default value using reverse() will cause circular-import3
         # problems with the default URLConf for this application, which
         # imports this file.
         return HttpResponseRedirect(success_url or reverse('invitation_complete'))
     extra_context.update({
-            'form': form,
+            'formset': formset,
             'remaining_invitations': remaining_invitations,
         })
     return render_to_response(template_name, extra_context, RequestContext(request))

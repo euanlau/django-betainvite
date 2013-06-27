@@ -1,21 +1,26 @@
 {% extends "betainvite/base.html" %}
-{% load i18n %}
+{% load i18n crispy_forms_tags %}
 
 {% block content %}
 
-<h2>{% trans "Invite a friend" %}</h2>
+<div class="container">
+<h2>{% trans "Invite Your Friends To Join" %}</h2>
 
 {% ifequal remaining_invitations 0 %}
 <p>{% trans "You currently have no invitations to send." %}</p>
 {% else %}
 
-<form action="{% url invitation_invite %}" method="POST">
-<table>
-{{form.as_table}}
-</table>
-
-<input type="submit" value="{% trans "Send Invitation" %}" />
+<form action="{% url 'invitation_invite' %}" class="validate form-inline" method="post">
+{{ formset.management_form }}
+{% for form in formset %}
+    {% crispy form %}
+{% endfor %}
+<div class="form-actions">
+  <input type="submit" name="submit" value="{% trans 'Send Invitation' %}" class="btn" id="submit-id-submit">
+</div>
 </form>
+
 {% endifequal %}
+</div>
 
 {% endblock %}

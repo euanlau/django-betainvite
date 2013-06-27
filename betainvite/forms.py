@@ -63,3 +63,14 @@ class WaitingListEntryForm(forms.ModelForm):
 
 class InvitationKeyForm(forms.Form):
     email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super(InvitationKeyForm, self).__init__(*args, **kwargs)
+        self.fields["email"].widget.attrs["placeholder"] = _("Email Address")
+        self.fields["email"].label = ""
+
+        self.helper = FormHelper()
+        self.helper.form_tag = False
+        self.helper.layout = Layout(
+            Field('email', css_class='input-large'),
+        )
