@@ -23,19 +23,6 @@ else:
 
 from betainvite.conf import settings as appsettings
 
-class WaitingListEntry(models.Model):
-    email = models.EmailField(_("email address"), unique=True)
-    created = models.DateTimeField(_("created"), default=timezone.now,
-                                   editable=False)
-    invited = models.BooleanField(_('Invited'), default=False)
-
-    class Meta:
-        verbose_name = _("waiting list entry")
-        verbose_name_plural = _("waiting list entries")
-
-    def __unicode__(self):
-        return self.email
-
 class InvitationKeyManager(models.Manager):
     def get_key(self, invitation_key):
         """
@@ -159,6 +146,29 @@ class InvitationUser(models.Model):
     def __unicode__(self):
         return u"InvitationUser for %s" % self.inviter.username
 
+
+class WaitingListEntry(models.Model):
+    email = models.EmailField(_("email address"), unique=True)
+    created = models.DateTimeField(_("created"), default=timezone.now,
+                                   editable=False)
+    invited = models.BooleanField(_('Invited'), default=False)
+
+    def send_invitation(self):
+        """
+        Send an invitation email to the subscriber.
+        """
+        invitation = InvitationKey.objects.create_invitation()
+        invitation.send_to(self.email)
+        self.invited = True
+        self.save()
+
+    class Meta:
+        verbose_name = _("waiting list entry")
+        verbose_name_plural = _("waiting list entries")
+        ordering = ['created',]
+
+    def __unicode__(self):
+        return self.email
 
 def user_post_save(sender, instance, created, **kwargs):
     """Create InvitationUser for user when User is created."""
