@@ -1,5 +1,9 @@
 {% load i18n %}
-{% blocktrans with site.name as sitename and invitation_key.from_user.username as username %}You have been invited by {{ username }} to join {{ sitename }}!{% endblocktrans %}
+{% if invitation_key.from_user %}
+{% blocktrans with site.name as sitename and invitation_key.from_user.get_full_name as username %}You have been invited by {{ username }} to join {{ sitename }}!{% endblocktrans %}
+{% else %}
+{% blocktrans with site.name as sitename %}You have been invited to join {{ sitename }}!{% endblocktrans %}
+{% endif %}
 
 {% trans "Go to" %}
 http://{{site.domain}}{% url 'registration_register' %}?invitation_key={{invitation_key.key}}

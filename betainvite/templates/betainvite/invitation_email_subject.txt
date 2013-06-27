@@ -1,2 +1,6 @@
 {% load i18n %}
-{% blocktrans with site.name as sitename and invitation_key.from_user.username as username %}Invitation from {{ username }} to join {{ sitename }}{% endblocktrans %}
+{% if invitation_key.from_user %}
+{% blocktrans with site.name as sitename and invitation_key.from_user.get_full_name as username %}Invitation from {{ username }} to join {{ sitename }}{% endblocktrans %}
+{% else %}
+{% blocktrans with site.name as sitename %}Invitation to join {{ sitename }}{% endblocktrans %}
+{% endif %}
