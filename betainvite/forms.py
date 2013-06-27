@@ -57,7 +57,7 @@ class WaitingListEntryForm(forms.ModelForm):
                 '',
                  Field('email', css_class='input-large')
             ),
-            Submit('submit', 'Subscribe', css_class='btn btn-success btn-large')
+            Submit('submit', _('Request Invitation'), css_class='btn btn-success btn-large')
         )
 
 
