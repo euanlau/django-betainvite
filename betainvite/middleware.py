@@ -50,9 +50,6 @@ class BetaMiddleware(object):
             return
         if '%s' % view_func.__module__ in whitelisted_modules:
             return
-
-        print self.always_allow_urls
-        print request.get_full_path()
         if request.get_full_path() in self.always_allow_urls:
             return
         else:
