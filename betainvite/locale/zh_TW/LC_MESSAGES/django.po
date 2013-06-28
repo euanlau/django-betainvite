@@ -16,15 +16,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: forms.py:28
 msgid "User already exists"
 msgstr ""
 
 #: forms.py:60
-#, fuzzy
 msgid "Request Invitation"
-msgstr "Einladung abschicken"
+msgstr "要求邀請"
 
 #: forms.py:69
 msgid "Email Address"
@@ -32,11 +32,11 @@ msgstr ""
 
 #: models.py:73
 msgid "invitation key"
-msgstr "Einladungscode"
+msgstr ""
 
 #: models.py:74
 msgid "date invited"
-msgstr "Einladungsdatum"
+msgstr ""
 
 #: models.py:151
 msgid "email address"
@@ -47,9 +47,8 @@ msgid "created"
 msgstr ""
 
 #: models.py:154
-#, fuzzy
 msgid "Invited"
-msgstr "Leute einladen"
+msgstr ""
 
 #: models.py:166
 msgid "waiting list entry"
@@ -61,7 +60,7 @@ msgstr ""
 
 #: views.py:49
 msgid "Email Address "
-msgstr ""
+msgstr "電郵地址"
 
 #: templates/betainvite/base.html:6
 msgid "Untitled Page"
@@ -69,30 +68,29 @@ msgstr ""
 
 #: templates/betainvite/invitation_complete.html:6
 msgid "Invitation sent"
-msgstr "Die Einladung wurde verschickt!"
+msgstr ""
 
 #: templates/betainvite/invitation_complete.html:8
 msgid "Your friend will receive an email with your invitation soon!"
 msgstr ""
-"Der/die Empfänger/in wird in Kürze eine Email mit deiner Einladung erhalten."
 
 #: templates/betainvite/invitation_email.txt:3
 #, python-format
 msgid "You have been invited by %(username)s to join %(sitename)s!"
-msgstr "Du hast eine Einladung von %(username)s zu %(sitename)s bekommen!"
+msgstr ""
 
 #: templates/betainvite/invitation_email.txt:5
-#, fuzzy, python-format
+#, python-format
 msgid "You have been invited to join %(sitename)s!"
-msgstr "Du hast eine Einladung von %(username)s zu %(sitename)s bekommen!"
+msgstr ""
 
 #: templates/betainvite/invitation_email.txt:8
 msgid "Go to"
-msgstr "Klick auf"
+msgstr ""
 
 #: templates/betainvite/invitation_email.txt:10
 msgid "to join!"
-msgstr "um mitzumachen!"
+msgstr ""
 
 #: templates/betainvite/invitation_email.txt:12
 #, python-format
@@ -101,25 +99,21 @@ msgid ""
 "\n"
 "The %(sitename)s Team"
 msgstr ""
-"Alles Gute,\n"
-"\n"
-"Das %(sitename)s Team"
 
 #: templates/betainvite/invitation_email_subject.txt:3
 #, python-format
 msgid "Invitation from %(username)s to join %(sitename)s"
-msgstr "Einladung von %(username)s zu %(sitename)s"
+msgstr ""
 
 #: templates/betainvite/invitation_email_subject.txt:5
-#, fuzzy, python-format
+#, python-format
 msgid "Invitation to join %(sitename)s"
-msgstr "Einladung von %(username)s zu %(sitename)s"
+msgstr ""
 
 #: templates/betainvite/invitation_form.html:5
 #: templates/betainvite/invitation_form.html:12
-#, fuzzy
 msgid "Invite Your Friends To Join"
-msgstr "Leute einladen"
+msgstr ""
 
 #: templates/betainvite/invitation_form.html:15
 msgid "You currently have no invitations to send."
@@ -127,12 +121,12 @@ msgstr ""
 
 #: templates/betainvite/invitation_form.html:25
 msgid "Send Invitation"
-msgstr "Einladung abschicken"
+msgstr ""
 
 #: templates/betainvite/invited.html:6
 msgid "You have been invited!"
-msgstr "Du wurdest eingeladen!"
+msgstr ""
 
 #: templates/betainvite/invited.html:8
 msgid "proceed to registration"
-msgstr "Weiter zur Registrierung"
+msgstr ""
