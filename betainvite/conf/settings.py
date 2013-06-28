@@ -30,6 +30,12 @@ List of views that can be accessed when private mode is enabled
 """
 BETA_ALWAYS_ALLOW_MODULES = getattr(settings, 'BETA_ALWAYS_ALLOW_MODULES', [])
 
+
+"""
+List of urls that can be accessed when private mode is enabled
+"""
+BETA_ALWAYS_ALLOW_URLS = getattr(settings, 'BETA_ALWAYS_ALLOW_URLS', ['waitlist_success',])
+
 """
 Redirect URL when user does not have private beta access
 """

@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import resolve_url
-
+from django.core.urlresolvers import reverse
 from betainvite.conf import settings
 from betainvite.models import InvitationKey
 
@@ -18,6 +18,7 @@ class BetaMiddleware(object):
         self.private_access = settings.BETA_PRIVATE_MODE
         self.always_allow_views = settings.BETA_ALWAYS_ALLOW_VIEWS
         self.always_allow_modules = settings.BETA_ALWAYS_ALLOW_MODULES
+        self.always_allow_urls = [reverse(x) for x in settings.BETA_ALWAYS_ALLOW_URLS]
         self.redirect_url = resolve_url(settings.BETA_REDIRECT_URL)
 
     def process_view(self, request, view_func, view_args, view_kwargs):
@@ -48,6 +49,11 @@ class BetaMiddleware(object):
         if full_view_name in self.always_allow_views:
             return
         if '%s' % view_func.__module__ in whitelisted_modules:
+            return
+
+        print self.always_allow_urls
+        print request.get_full_path()
+        if request.get_full_path() in self.always_allow_urls:
             return
         else:
             return HttpResponseRedirect(self.redirect_url)

@@ -2,6 +2,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -27,12 +28,12 @@ def waitlist_signup(request, form_class=WaitingListEntryForm,
             post_save_redirect = reverse("waitlist_success")
         if not post_save_redirect.startswith("/"):
             post_save_redirect = reverse(post_save_redirect)
-        return redirect(post_save_redirect)
+        return HttpResponseRedirect(post_save_redirect)
     ctx = {
         "form": form,
     }
     ctx.update(extra_context)
-    return render_to_response(template_name, ctx, RequestContext(request))
+    return TemplateResponse(request, template_name, ctx)
 
 @login_required
 def invite(request, success_url=None,
@@ -63,4 +64,5 @@ def invite(request, success_url=None,
             'formset': formset,
             'remaining_invitations': remaining_invitations,
         })
-    return render_to_response(template_name, extra_context, RequestContext(request))
+
+    return TemplateResponse(request, template_name, extra_context)
