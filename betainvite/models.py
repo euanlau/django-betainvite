@@ -11,6 +11,9 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.models import Site
 from django.utils import timezone
+from django.dispatch import receiver
+
+from registration import signals as registration_signals
 
 try:
     from django.contrib.auth import get_user_model
@@ -187,3 +190,15 @@ def invitation_key_post_save(sender, instance, created, **kwargs):
         invitation_user.save()
 
 models.signals.post_save.connect(invitation_key_post_save, sender=InvitationKey)
+
+@receiver(registration_signals.user_registered)
+def post_user_registration(sender, user, request, **kwargs):
+    """
+    Mark the invitation key as used post user registration.
+    """
+    invitation_key = request.REQUEST.get('invitation_key')
+    key = InvitationKey.objects.get_key(invitation_key)
+    if key:
+        key.mark_used(user)
+
+    return
