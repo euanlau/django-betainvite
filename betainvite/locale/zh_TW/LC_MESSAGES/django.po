@@ -68,29 +68,29 @@ msgstr ""
 
 #: templates/betainvite/invitation_complete.html:6
 msgid "Invitation sent"
-msgstr ""
+msgstr "邀請已發出"
 
 #: templates/betainvite/invitation_complete.html:8
 msgid "Your friend will receive an email with your invitation soon!"
-msgstr ""
+msgstr "您的朋友將快收到您的邀請！"
 
 #: templates/betainvite/invitation_email.txt:3
 #, python-format
 msgid "You have been invited by %(username)s to join %(sitename)s!"
-msgstr ""
+msgstr "%(username)s 邀請您加入 %(sitename)s"
 
 #: templates/betainvite/invitation_email.txt:5
 #, python-format
 msgid "You have been invited to join %(sitename)s!"
-msgstr ""
+msgstr "您已被邀請加入 %(sitename)s!"
 
 #: templates/betainvite/invitation_email.txt:8
 msgid "Go to"
-msgstr ""
+msgstr "請按此"
 
 #: templates/betainvite/invitation_email.txt:10
 msgid "to join!"
-msgstr ""
+msgstr "加入"
 
 #: templates/betainvite/invitation_email.txt:12
 #, python-format
@@ -98,35 +98,35 @@ msgid ""
 "All the best,\n"
 "\n"
 "The %(sitename)s Team"
-msgstr ""
+msgstr "%(sitename)s 團隊"
 
 #: templates/betainvite/invitation_email_subject.txt:3
 #, python-format
 msgid "Invitation from %(username)s to join %(sitename)s"
-msgstr ""
+msgstr "%(username)s 邀請您加入 %(sitename)s"
 
 #: templates/betainvite/invitation_email_subject.txt:5
 #, python-format
 msgid "Invitation to join %(sitename)s"
-msgstr ""
+msgstr "邀請加入 %(sitename)s"
 
 #: templates/betainvite/invitation_form.html:5
 #: templates/betainvite/invitation_form.html:12
 msgid "Invite Your Friends To Join"
-msgstr ""
+msgstr "邀請你的朋友加入"
 
 #: templates/betainvite/invitation_form.html:15
 msgid "You currently have no invitations to send."
-msgstr ""
+msgstr "您目前沒有邀請可以發送。"
 
 #: templates/betainvite/invitation_form.html:25
 msgid "Send Invitation"
-msgstr ""
+msgstr "發送邀請"
 
 #: templates/betainvite/invited.html:6
 msgid "You have been invited!"
-msgstr ""
+msgstr "您已被邀請！"
 
 #: templates/betainvite/invited.html:8
 msgid "proceed to registration"
-msgstr ""
+msgstr "辦理登記手續"
