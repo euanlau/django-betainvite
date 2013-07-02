@@ -50,7 +50,7 @@ class BetaMiddleware(object):
             return
         if '%s' % view_func.__module__ in whitelisted_modules:
             return
-        if request.get_full_path() in self.always_allow_urls:
+        if request.path in self.always_allow_urls:
             return
         else:
             return HttpResponseRedirect(self.redirect_url)
