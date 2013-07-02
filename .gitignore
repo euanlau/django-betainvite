@@ -1,6 +1,6 @@
 *.pyc
 *.elc
-*.pyc
+*.pyo
 *~
 *.orig
 *.log
