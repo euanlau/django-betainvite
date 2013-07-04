@@ -45,7 +45,23 @@ class InvitationKeyManager(models.Manager):
         invitation_key = self.get_key(invitation_key)
         return invitation_key and invitation_key.is_usable()
 
-    def create_invitation(self, user=None):
+    def get_or_create_multi_use_invitation(self, user):
+        """
+        Create an ``InvitationKey`` and returns it.
+
+        The key for the ``InvitationKey`` will be a uuid
+        """
+        try:
+            key = self.get(from_user=user, allow_multi_use=True)
+        except self.model.DoesNotExist:
+            key = None
+
+        if key is None or key.key_expired():
+            key = self.create_invitation(user=user, multi_use=True)
+
+        return key
+
+    def create_invitation(self, user=None, multi_use=False):
         """
         Create an ``InvitationKey`` and returns it.
 
@@ -53,7 +69,7 @@ class InvitationKeyManager(models.Manager):
         from a combination of the ``User``'s username and a random salt.
         """
         key = uuid.uuid4().hex
-        return self.create(from_user=user, key=key)
+        return self.create(from_user=user, key=key, allow_multi_use=multi_use)
 
     def remaining_invitations_for_user(self, user):
         """
@@ -78,6 +94,8 @@ class InvitationKey(models.Model):
                                   related_name='invitations_sent')
     registrant = models.ForeignKey(User, null=True, blank=True,
                                   related_name='invitations_used')
+    allow_multi_use = models.BooleanField(_('allow mulit use'),
+                                          default=False)
 
     objects = InvitationKeyManager()
 
@@ -117,6 +135,8 @@ class InvitationKey(models.Model):
         """
         Note that this key has been used to register a new user.
         """
+        if self.allow_multi_use:
+            return
         self.registrant = registrant
         self.save()
 
