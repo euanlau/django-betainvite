@@ -31,3 +31,14 @@ def waitinglist_entry_form():
 
     """
     return WaitingListEntryForm()
+
+@register.simple_tag(takes_context = True)
+def new_invitation_key(context, multi_use=False):
+    request = context['request']
+    user = request.user
+    if multi_use:
+        key = InvitationKey.objects.get_or_create_multi_use_invitation(user)
+    else:
+        key = InvitationKey.objects.create_invitation(user)
+
+    return key.key
